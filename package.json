@@ -1,0 +1,14 @@
+{
+  "name": "@cs7player/cleaner",
+  "version": "1.0.4",
+  "description": "to remove the unwanted branches in local",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "cleaner": "app.js"
+  },
+  "author": "s.h.chandrasekhar",
+  "license": "ISC"
+}
