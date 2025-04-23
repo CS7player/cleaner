@@ -8,41 +8,41 @@ const { argv } = process;
 
 let scriptPath; // Declare it once here
 
-if (arv[2] == "help") {
-  try {
-    const [figure] = await Promise.all([
-      readFile(`./dog.txt`)
-    ]);
-    const image = `\u001b[${GC}m${figure}\u001b[0m`;
-    const show = `${image}`;
-    console.log(show);
-  } catch (err) {
-    console.log(err);
-  }
-  return
-}
-
-if (argv[2] === "force") {
-  scriptPath = path.join(__dirname, 'delete_branches.sh');
-} else {
-  scriptPath = path.join(__dirname, 'remove_branches.sh');
-}
-
-console.log('Current working directory:', userCwd);
-console.log('Using script:', scriptPath);
-
-exec(`sh "${scriptPath}"`, { cwd: userCwd }, (error, stdout, stderr) => {
-  if (stdout) {
-    console.log(`Script output:\n${stdout}`);
-  }
-  if (stderr) {
-    console.error(`Script stderr:\n${stderr}`);
-  }
-
-  if (error) {
-    console.error(`Script exited with code ${error.code}`);
+// ✅ Fix 1: Typo - `arv` → `argv`
+// ✅ Fix 2: Use an IIFE to handle `await` at top level
+(async () => {
+  if (argv[2] === "help") {
+    try {
+      const figure = await readFile(path.join(__dirname, 'dog.txt'), 'utf-8');
+      const image = `\u001b[32m${figure}\u001b[0m`; // GC was undefined, so I used green (32) for now
+      console.log(image);
+    } catch (err) {
+      console.error("Error reading help image:", err);
+    }
     return;
   }
 
-  console.log("✅ Script executed successfully.");
-});
+  if (argv[2] === "force") {
+    scriptPath = path.join(__dirname, 'delete_branches.sh');
+  } else {
+    scriptPath = path.join(__dirname, 'remove_branches.sh');
+  }
+
+  console.log('Current working directory:', userCwd);
+  console.log('Using script:', scriptPath);
+
+  exec(`sh "${scriptPath}"`, { cwd: userCwd }, (error, stdout, stderr) => {
+    if (stdout) {
+      console.log(`\n📤 Script output:\n${stdout}`);
+    }
+    if (stderr) {
+      console.error(`\n⚠️ Script stderr:\n${stderr}`);
+    }
+    if (error) {
+      console.error(`\n❌ Script exited with code ${error.code}`);
+      return;
+    }
+
+    console.log("\n✅ Script executed successfully.");
+  });
+})();
